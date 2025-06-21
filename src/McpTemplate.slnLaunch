@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "Aspire",
+    "Projects": [
+      {
+        "Path": "McpTemplate.AppHost\\McpTemplate.AppHost.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "McpTemplate.Console\\McpTemplate.Console.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
