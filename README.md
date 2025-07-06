@@ -33,16 +33,12 @@ To enable OAuth protection for your ToolServer and Console client, add an `OAuth
   "Authority": "https://login.microsoftonline.com/{tenantId}/v2.0",
   "Audience": "your-api-audience",
   "ClientId": "your-client-id",
-  "ClientSecret": "set-in-user-secrets",
   "RedirectUri": "http://localhost:5000/callback",
   "Scopes": [ "api://your-api-audience/.default" ]
 }
 ```
 
-**Recommended:** Store `ClientSecret` and any other sensitive values using [user-secrets](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets) for local development:
-
 ```bash
-dotnet user-secrets set OAuth:ClientSecret <your-client-secret>
 dotnet user-secrets set OAuth:ClientId <your-client-id>
 dotnet user-secrets set OAuth:Audience <your-api-audience>
 dotnet user-secrets set OAuth:Authority https://login.microsoftonline.com/<tenantId>/v2.0
