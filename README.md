@@ -3,7 +3,7 @@
 * [Streamable HTTP](https://modelcontextprotocol.io/docs/concepts/transports) from Aspire host runtime.
 * .NET 9 application host
 * Docker container build
-* OAuth functionality (TODO)
+* OAuth support for protecting your ToolServer and authenticating Console clients
 
 ## Get Started
 
@@ -23,13 +23,43 @@ Take this template repository and create your repo from it.
 * ToolServer [McpServer Setup](./McpTemplate.ToolServer/Program.cs)
 * ToolServer [DateTime](./McpTemplate.ToolServer/Tools/DateTimeTool.cs)
 
-## User Secrets
+
+## OAuth Configuration
+
+To enable OAuth protection for your ToolServer and Console client, add an `OAuth` section to your `appsettings.json` (or use user-secrets for sensitive values):
+
+```json
+"OAuth": {
+  "Authority": "https://login.microsoftonline.com/{tenantId}/v2.0",
+  "Audience": "your-api-audience",
+  "ClientId": "your-client-id",
+  "ClientSecret": "set-in-user-secrets",
+  "RedirectUri": "http://localhost:5000/callback",
+  "Scopes": [ "api://your-api-audience/.default" ]
+}
+```
+
+**Recommended:** Store `ClientSecret` and any other sensitive values using [user-secrets](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets) for local development:
+
+```bash
+dotnet user-secrets set OAuth:ClientSecret <your-client-secret>
+dotnet user-secrets set OAuth:ClientId <your-client-id>
+dotnet user-secrets set OAuth:Audience <your-api-audience>
+dotnet user-secrets set OAuth:Authority https://login.microsoftonline.com/<tenantId>/v2.0
+dotnet user-secrets set OAuth:RedirectUri http://localhost:5000/callback
+dotnet user-secrets set OAuth:Scopes:0 api://<your-api-audience>/.default
+```
+
+If you do **not** set the `OAuth` section, the ToolServer and Console will run in unauthenticated mode for quick local usage.
+
+---
 
 | Secret | |
 |--|--|
 | McpTemplateOptions__Endpoint | https://{name}.openai.azure.com |
 | McpTemplateOptions__ApiKey | Get from your Azure OpenAI Service |
 | McpTemplateOptions__Model | Name of your deployed model, example: `gpt-4o-mini` |
+
 
 Add these in Visual Studio by right-clicking your project and selecting "Manage User Secrets". This will open a `secrets.json` file. Add the above secrets in the following format:
 
@@ -39,16 +69,31 @@ Add these in Visual Studio by right-clicking your project and selecting "Manage 
     "Endpoint": "https://{name}.openai.azure.com",
     "ApiKey": "<your_api_key>",
     "Model": "gpt-4o-mini"
+  },
+  "OAuth": {
+    "Authority": "https://login.microsoftonline.com/{tenantId}/v2.0",
+    "Audience": "your-api-audience",
+    "ClientId": "your-client-id",
+    "ClientSecret": "<your-client-secret>",
+    "RedirectUri": "http://localhost:5000/callback",
+    "Scopes": [ "api://your-api-audience/.default" ]
   }
 }
 ```
 
-or, you can use the command line to set them:
+Or, you can use the command line to set them:
 
 ```bash
 dotnet user-secrets set McpTemplateOptions:Endpoint https://{name}.openai.azure.com
 dotnet user-secrets set McpTemplateOptions:ApiKey <your_api_key>
 dotnet user-secrets set McpTemplateOptions:Model gpt-4o-mini
+# OAuth secrets
+dotnet user-secrets set OAuth:Authority https://login.microsoftonline.com/<tenantId>/v2.0
+dotnet user-secrets set OAuth:Audience <your-api-audience>
+dotnet user-secrets set OAuth:ClientId <your-client-id>
+dotnet user-secrets set OAuth:ClientSecret <your-client-secret>
+dotnet user-secrets set OAuth:RedirectUri http://localhost:5000/callback
+dotnet user-secrets set OAuth:Scopes:0 api://<your-api-audience>/.default
 ```
 
 ## Docker Image
