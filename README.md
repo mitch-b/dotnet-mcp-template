@@ -3,6 +3,7 @@
 * [Streamable HTTP](https://modelcontextprotocol.io/docs/concepts/transports) from Aspire host runtime.
 * .NET 9 application host
 * Docker container build
+* OAuth functionality (TODO)
 
 ## Get Started
 
@@ -68,3 +69,15 @@ docker run \
   -e McpTemplateOptions__Model="gpt-4o-mini" \
   template-mcp:dev
 ```
+
+
+## Solution Design
+
+- **McpTemplate.Application**: Core business logic and service registration; extend here for new features/services.
+- **McpTemplate.Common**: Shared models and options; update for cross-project types and configuration.
+- **McpTemplate.Console**: Console app for testing and running chat completions; useful for local development.
+- **McpTemplate.ToolServer**: Implements MCP ToolServer and tools; add new tools in `Tools/` and configure in `Program.cs`.
+
+### Aspire Components
+- **McpTemplate.AppHost**: Main entrypoint for hosting the application; configures and runs the Aspire Dashboard server for local development.
+- **McpTemplate.ServiceDefaults**: Common service extensions and defaults; use for shared service setup.
