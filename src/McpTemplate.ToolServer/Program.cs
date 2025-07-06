@@ -42,7 +42,7 @@ if (enableOAuth)
             ValidAudience = oauthAudience,
             ValidIssuer = oauthAuthority,
             NameClaimType = "name",
-            RoleClaimType = "roles"
+            RoleClaimType = "roles",
         };
 
         options.MetadataAddress = $"{oauthAuthority}/.well-known/openid-configuration";
@@ -72,7 +72,7 @@ if (enableOAuth)
     {
         options.ResourceMetadata = new()
         {
-            Resource = new Uri(serverUrl),
+            Resource = new Uri("http://localhost:5499/"), // i don't want a resource here... fails.
             BearerMethodsSupported = { "header" },
             ResourceDocumentation = new Uri("https://docs.example.com/api/McpTemplate"),
             AuthorizationServers = { new Uri(oauthAuthority!) },

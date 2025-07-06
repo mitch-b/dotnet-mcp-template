@@ -15,6 +15,7 @@ var builder = Host.CreateApplicationBuilder();
 builder.Configuration.AddUserSecrets<Program>();
 
 builder.Services.Configure<McpTemplateOptions>(builder.Configuration.GetSection(nameof(McpTemplateOptions)));
+builder.Services.Configure<OAuthOptions>(builder.Configuration.GetSection("OAuth"));
 
 builder.Services.AddSingleton<IOAuthAuthorizationHandler, OAuthAuthorizationHandler>();
 builder.Services.AddApplicationServices(builder.Configuration);

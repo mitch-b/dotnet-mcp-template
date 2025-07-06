@@ -40,10 +40,26 @@ public class OAuthAuthorizationHandler(ILogger<OAuthAuthorizationHandler> logger
     public async Task<string?> HandleAuthorizationUrlAsync(Uri authorizationUrl, Uri redirectUri, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Starting OAuth authorization flow...");
-        _logger.LogInformation($"Opening browser to: {authorizationUrl}");
+        // Remove any '&resource=...' or '?resource=...' from the authorizationUrl
+        var uriBuilder = new UriBuilder(authorizationUrl);
+        var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+        if (query["resource"] != null)
+        {
+            query.Remove("resource");
+            uriBuilder.Query = query.ToString();
+            _logger.LogInformation($"Removed 'resource' from authorization URL. New URL: {uriBuilder.Uri}");
+        }
+        else
+        {
+            _logger.LogInformation($"Opening browser to: {authorizationUrl}");
+        }
+        var cleanAuthorizationUrl = uriBuilder.Uri;
 
         var listenerPrefix = redirectUri.GetLeftPart(UriPartial.Authority);
-        if (!listenerPrefix.EndsWith("/")) listenerPrefix += "/";
+        if (!listenerPrefix.EndsWith("/"))
+        {
+            listenerPrefix += "/";
+        }
 
         using var listener = new HttpListener();
         listener.Prefixes.Add(listenerPrefix);
@@ -53,12 +69,12 @@ public class OAuthAuthorizationHandler(ILogger<OAuthAuthorizationHandler> logger
             listener.Start();
             _logger.LogInformation($"Listening for OAuth callback on: {listenerPrefix}");
 
-            OpenBrowser(authorizationUrl);
+            OpenBrowser(cleanAuthorizationUrl);
 
             var context = await listener.GetContextAsync();
-            var query = HttpUtility.ParseQueryString(context.Request.Url?.Query ?? string.Empty);
-            var code = query["code"];
-            var error = query["error"];
+            var callbackQuery = HttpUtility.ParseQueryString(context.Request.Url?.Query ?? string.Empty);
+            var code = callbackQuery["code"];
+            var error = callbackQuery["error"];
 
             string responseHtml = "<html><body><h1>Authentication complete</h1><p>You can close this window now.</p></body></html>";
             byte[] buffer = Encoding.UTF8.GetBytes(responseHtml);
@@ -89,7 +105,10 @@ public class OAuthAuthorizationHandler(ILogger<OAuthAuthorizationHandler> logger
         }
         finally
         {
-            if (listener.IsListening) listener.Stop();
+            if (listener.IsListening)
+            {
+                listener.Stop();
+            }
         }
     }
 }

@@ -60,6 +60,7 @@ public static class ServiceCollectionExtensions
                         {
                             httpTransportOptions.OAuth = new()
                             {
+                                ClientName = "McpTemplate Client",
                                 ClientId = oauthOptions?.ClientId,
                                 RedirectUri = !string.IsNullOrWhiteSpace(oauthOptions?.RedirectUri) ? new Uri(oauthOptions.RedirectUri) : null!,
                                 Scopes = oauthOptions?.Scopes ?? [],
@@ -71,7 +72,7 @@ public static class ServiceCollectionExtensions
                             };
                         }
                         httpClientTransport = new SseClientTransport(httpTransportOptions, client, loggerFactory);
-                        return McpClientFactory.CreateAsync(httpClientTransport, clientOptions).GetAwaiter().GetResult();
+                        return McpClientFactory.CreateAsync(httpClientTransport, clientOptions, loggerFactory).GetAwaiter().GetResult();
                     case "stdio":
                         string command;
                         List<string> args = new();
