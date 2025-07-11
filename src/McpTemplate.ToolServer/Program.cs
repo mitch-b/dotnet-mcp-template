@@ -1,6 +1,7 @@
 using McpTemplate.Application.Extensions;
 using McpTemplate.ToolServer.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using ModelContextProtocol.AspNetCore.Authentication;
 using System.Security.Claims;
@@ -16,12 +17,19 @@ builder.Services.AddProblemDetails();
 var oauthSection = builder.Configuration.GetSection("OAuth");
 var oauthAuthority = oauthSection["Authority"];
 var oauthAudience = oauthSection["Audience"];
+var oauthTenant = oauthSection["Tenant"];
 
 var enableOAuth = !string.IsNullOrWhiteSpace(oauthAuthority)
     && !string.IsNullOrWhiteSpace(oauthAudience);
 
+IdentityModelEventSource.ShowPII = true; // Enable PII logging for debugging
+IdentityModelEventSource.LogCompleteSecurityArtifact = true;
+
+
 if (enableOAuth)
 {
+    string[] validAudiences = [serverUrl, $"api://{oauthAudience}"];
+    string[] validIssuers = [oauthAuthority, $"https://sts.windows.net/{oauthTenant}/"];
     builder.Services.AddAuthentication(options =>
     {
         options.DefaultChallengeScheme = McpAuthenticationDefaults.AuthenticationScheme;
@@ -36,8 +44,8 @@ if (enableOAuth)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidAudience = serverUrl,
-            ValidIssuer = oauthAuthority,
+            ValidAudiences = validAudiences,
+            ValidIssuers = validIssuers,
             NameClaimType = "name",
             RoleClaimType = "roles",
         };

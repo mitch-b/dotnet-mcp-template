@@ -3,6 +3,7 @@ namespace McpTemplate.Common.Models;
 public class OAuthOptions
 {
     public string? Authority { get; set; }
+    public string? Tenant { get; set; }
     public string? Audience { get; set; }
     public string? ClientId { get; set; }
     public string? ClientSecret { get; set; }
