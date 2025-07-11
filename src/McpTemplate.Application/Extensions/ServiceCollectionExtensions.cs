@@ -1,11 +1,11 @@
+using McpTemplate.Common.Interfaces;
+using McpTemplate.Common.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ModelContextProtocol.Client;
 using ModelContextProtocol.Protocol;
-using McpTemplate.Common.Models;
-using McpTemplate.Common.Interfaces;
 
 namespace McpTemplate.Application.Extensions;
 

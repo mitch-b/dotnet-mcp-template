@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Options;
-
 namespace McpTemplate.ToolServer.Extensions;
 
 public static class ServiceCollectionExtensions
