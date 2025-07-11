@@ -8,9 +8,7 @@ using ModelContextProtocol.AspNetCore.Authentication;
 var builder = WebApplication.CreateBuilder(args);
 
 // Derive the server URL for Resource metadata
-var serverUrl = builder.Configuration["applicationUrl"]
-    ?? Environment.GetEnvironmentVariable("ASPNETCORE_URLS")
-    ?? "http://localhost:5499";
+var serverUrl = "http://localhost:5499/"; // trailing slash important here...
 builder.AddServiceDefaults();
 builder.Services.AddProblemDetails();
 
@@ -26,26 +24,25 @@ if (enableOAuth)
 {
     builder.Services.AddAuthentication(options =>
     {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
         options.DefaultChallengeScheme = McpAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     })
     .AddJwtBearer(options =>
     {
         options.Authority = oauthAuthority;
-        // options.Audience = oauthAudience;
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidAudience = oauthAudience,
+            ValidAudience = serverUrl,
             ValidIssuer = oauthAuthority,
             NameClaimType = "name",
             RoleClaimType = "roles",
         };
 
-        options.MetadataAddress = $"{oauthAuthority}/.well-known/openid-configuration";
+        //options.MetadataAddress = $"{oauthAuthority}/.well-known/openid-configuration";
 
         options.Events = new JwtBearerEvents
         {
@@ -72,11 +69,10 @@ if (enableOAuth)
     {
         options.ResourceMetadata = new()
         {
-            Resource = new Uri("http://localhost:5499/"), // i don't want a resource here... fails.
-            BearerMethodsSupported = { "header" },
+            Resource = new Uri(serverUrl),
             ResourceDocumentation = new Uri("https://docs.example.com/api/McpTemplate"),
             AuthorizationServers = { new Uri(oauthAuthority!) },
-            ScopesSupported = [ $"api://{oauthAudience}/mcp.tools" ]
+            ScopesSupported = [$"api://{oauthAudience}/mcp.tools"]
         };
     });
 
@@ -92,8 +88,11 @@ builder.Services.AddMcpServices(builder.Configuration, enableOAuth);
 
 var app = builder.Build();
 app.UseExceptionHandler();
+
 app.UseRouting();
 app.MapDefaultEndpoints();
+
+app.MapGet("/", () => "McpTemplate MCP server is running!");
 
 if (enableOAuth)
 {
