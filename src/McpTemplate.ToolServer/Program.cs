@@ -22,10 +22,6 @@ var oauthTenant = oauthSection["Tenant"];
 var enableOAuth = !string.IsNullOrWhiteSpace(oauthAuthority)
     && !string.IsNullOrWhiteSpace(oauthAudience);
 
-IdentityModelEventSource.ShowPII = true; // Enable PII logging for debugging
-IdentityModelEventSource.LogCompleteSecurityArtifact = true;
-
-
 if (enableOAuth)
 {
     string[] validAudiences = [serverUrl, $"api://{oauthAudience}"];
@@ -49,8 +45,6 @@ if (enableOAuth)
             NameClaimType = "name",
             RoleClaimType = "roles",
         };
-
-        //options.MetadataAddress = $"{oauthAuthority}/.well-known/openid-configuration";
 
         options.Events = new JwtBearerEvents
         {
