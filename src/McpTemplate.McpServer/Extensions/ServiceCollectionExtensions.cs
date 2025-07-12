@@ -14,7 +14,8 @@ public static class ServiceCollectionExtensions
                 //     return Task.CompletedTask;
                 // };
             })
-            .WithToolsFromAssembly();
+            .WithToolsFromAssembly()
+            .WithPromptsFromAssembly();
         return services;
     }
 }
