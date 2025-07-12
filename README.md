@@ -51,20 +51,24 @@ Create.
 
 To enable OAuth protection for your ToolServer, add an `OAuth` section to your `appsettings.json` (or use user-secrets for sensitive values):
 
+(represented here with demo GUIDs)
+
 ```json
 "OAuth": {
-  "Tenant": "<tenantId>",
-  "Audience": "api://your-audience-guid",
-  "Authority": "https://login.microsoftonline.com/<tenantId>/v2.0",
-  "Scopes": [ "api://your-audience-guid/mcp.tools" ]
+  "Tenant": "eb4f98a8-4c60-4348-86a0-baea7df39d74",
+  "Authority": "https://login.microsoftonline.com/eb4f98a8-4c60-4348-86a0-baea7df39d74/v2.0",
+
+  "Audience": "api://d13cafd2-01ac-4692-a1d9-aa5611d7cbe0",
+  "Scopes": [ "api://d13cafd2-01ac-4692-a1d9-aa5611d7cbe0/mcp.tools" ]
 }
 ```
 
 ```bash
-dotnet user-secrets set OAuth:Tenant <tenantId>
-dotnet user-secrets set OAuth:Audience <your-audience-guid>
-dotnet user-secrets set OAuth:Authority https://login.microsoftonline.com/<tenantId>/v2.0
-dotnet user-secrets set OAuth:Scopes:0 api://<your-audience-guid>/mcp.tools
+dotnet user-secrets set OAuth:Tenant eb4f98a8-4c60-4348-86a0-baea7df39d74
+dotnet user-secrets set OAuth:Authority https://login.microsoftonline.com/eb4f98a8-4c60-4348-86a0-baea7df39d74/v2.0
+
+dotnet user-secrets set OAuth:Audience api://d13cafd2-01ac-4692-a1d9-aa5611d7cbe0
+dotnet user-secrets set OAuth:Scopes:0 api://d13cafd2-01ac-4692-a1d9-aa5611d7cbe0/mcp.tools
 ```
 
 If you do **not** set the `OAuth` section, the ToolServer and Console will run in unauthenticated mode for quick local usage.
@@ -72,28 +76,31 @@ If you do **not** set the `OAuth` section, the ToolServer and Console will run i
 
 ### OAuth for Console (client)
 
+(represented here with demo GUIDs)
+
 ```json
 "OAuth": {
-  "ClientId": "<your-client-id>",
-  "RedirectUri": "http://localhost:5000/callback",
-  "Scopes": [ "api://your-audience-guid/.default" ]
+  "Scopes": [ "api://d13cafd2-01ac-4692-a1d9-aa5611d7cbe0/.default" ],
+  "ClientId": "fb35dbf1-6916-4bbf-98ed-74821d8f7ba4",
+  "RedirectUri": "http://localhost:5000/callback"
 }
 ```
 
 ```bash
-dotnet user-secrets set OAuth:ClientId <your-client-id>
+dotnet user-secrets set OAuth:Scopes:0 api://d13cafd2-01ac-4692-a1d9-aa5611d7cbe0/.default
+dotnet user-secrets set OAuth:ClientId fb35dbf1-6916-4bbf-98ed-74821d8f7ba4
 dotnet user-secrets set OAuth:RedirectUri http://localhost:5000/callback
-dotnet user-secrets set OAuth:Scopes:0 api://<your-audience-guid>/.default
 ```
 
+> Note: using `.default` instead of your named scope will request all API scopes.
 
 ---
 
 | Secret | |
 |--|--|
-| McpTemplateOptions__Endpoint | https://{name}.openai.azure.com |
-| McpTemplateOptions__ApiKey | Get from your Azure OpenAI Service |
-| McpTemplateOptions__Model | Name of your deployed model, example: `gpt-4o-mini` |
+| McpTemplateOptions:Endpoint | https://{name}.openai.azure.com |
+| McpTemplateOptions:ApiKey | Get from your Azure OpenAI Service |
+| McpTemplateOptions:Model | Name of your deployed model, example: `gpt-4o-mini` |
 
 
 Add these in Visual Studio by right-clicking your project and selecting "Manage User Secrets". This will open a `secrets.json` file. Add the above secrets in the following format:
@@ -106,12 +113,14 @@ Add these in Visual Studio by right-clicking your project and selecting "Manage 
     "Model": "gpt-4o-mini"
   },
   "OAuth": {
-    "Authority": "https://login.microsoftonline.com/{tenantId}/v2.0",
-    "Audience": "your-api-audience",
-    "ClientId": "your-client-id",
-    "ClientSecret": "<your-client-secret>",
-    "RedirectUri": "http://localhost:5000/callback",
-    "Scopes": [ "api://your-api-audience/.default" ]
+    "Tenant": "eb4f98a8-4c60-4348-86a0-baea7df39d74",
+    "Authority": "https://login.microsoftonline.com/eb4f98a8-4c60-4348-86a0-baea7df39d74/v2.0",
+
+    "Audience": "api://d13cafd2-01ac-4692-a1d9-aa5611d7cbe0",
+    "Scopes": [ "api://d13cafd2-01ac-4692-a1d9-aa5611d7cbe0/.default" ],
+
+    "ClientId": "fb35dbf1-6916-4bbf-98ed-74821d8f7ba4",
+    "RedirectUri": "http://localhost:5000/callback"
   }
 }
 ```
@@ -122,13 +131,15 @@ Or, you can use the command line to set them:
 dotnet user-secrets set McpTemplateOptions:Endpoint https://{name}.openai.azure.com
 dotnet user-secrets set McpTemplateOptions:ApiKey <your_api_key>
 dotnet user-secrets set McpTemplateOptions:Model gpt-4o-mini
-# OAuth secrets
-dotnet user-secrets set OAuth:Authority https://login.microsoftonline.com/<tenantId>/v2.0
-dotnet user-secrets set OAuth:Audience <your-api-audience>
-dotnet user-secrets set OAuth:ClientId <your-client-id>
-dotnet user-secrets set OAuth:ClientSecret <your-client-secret>
+
+dotnet user-secrets set OAuth:Tenant eb4f98a8-4c60-4348-86a0-baea7df39d74
+dotnet user-secrets set OAuth:Authority https://login.microsoftonline.com/eb4f98a8-4c60-4348-86a0-baea7df39d74/v2.0
+
+dotnet user-secrets set OAuth:Audience api://d13cafd2-01ac-4692-a1d9-aa5611d7cbe0
+dotnet user-secrets set OAuth:Scopes:0 api://d13cafd2-01ac-4692-a1d9-aa5611d7cbe0/.default
+
+dotnet user-secrets set OAuth:ClientId fb35dbf1-6916-4bbf-98ed-74821d8f7ba4
 dotnet user-secrets set OAuth:RedirectUri http://localhost:5000/callback
-dotnet user-secrets set OAuth:Scopes:0 api://<your-api-audience>/.default
 ```
 
 ## Docker Image
@@ -138,7 +149,7 @@ To build the Docker image, run the following command within the `src` folder:
 ```bash
 docker build \
   -f ./McpTemplate.ToolServer/Dockerfile \
-  -t template-mcp:dev \
+  -t mcp-tools:dev \
   .
 
 docker run \
@@ -147,7 +158,7 @@ docker run \
   -e McpTemplateOptions__Endpoint="https://{name}.openai.azure.com" \
   -e McpTemplateOptions__ApiKey="your-api-key" \
   -e McpTemplateOptions__Model="gpt-4o-mini" \
-  template-mcp:dev
+  mcp-tools:dev
 ```
 
 
