@@ -1,6 +1,6 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var toolServer = builder.AddProject<Projects.McpTemplate_ToolServer>("toolServer")
+var toolServer = builder.AddProject<Projects.McpTemplate_McpServer>("toolServer")
     .WithExternalHttpEndpoints();
 
 var chatClient = builder.AddProject<Projects.McpTemplate_Console>("chatClient")

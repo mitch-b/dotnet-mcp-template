@@ -15,5 +15,5 @@
   <Project Path="McpTemplate.Application\McpTemplate.Application.csproj" Type="Classic C#" />
   <Project Path="McpTemplate.Common\McpTemplate.Common.csproj" Type="Classic C#" />
   <Project Path="McpTemplate.Console\McpTemplate.Console.csproj" Type="Classic C#" />
-  <Project Path="McpTemplate.ToolServer\McpTemplate.ToolServer.csproj" Type="Classic C#" />
+  <Project Path="McpTemplate.McpServer\McpTemplate.McpServer.csproj" Type="Classic C#" />
 </Solution>

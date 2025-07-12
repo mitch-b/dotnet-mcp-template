@@ -6,7 +6,7 @@ WORKDIR /src
 
 COPY . .
 
-RUN dotnet publish McpTemplate.ToolServer/McpTemplate.ToolServer.csproj -c Release -o /app/publish --no-restore \
+RUN dotnet publish McpTemplate.McpServer/McpTemplate.McpServer.csproj -c Release -o /app/publish --no-restore \
     -p:PublishTrimmed=true -p:PublishReadyToRun=true -p:PublishSingleFile=true \
     -p:IncludeNativeLibrariesForSelfExtract=true -r ${RUNTIME_IDENTIFIER}
 
@@ -20,4 +20,4 @@ COPY --from=build /app/publish .
 RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
 USER appuser
 
-ENTRYPOINT ["/app/McpTemplate.ToolServer"]
+ENTRYPOINT ["/app/McpTemplate.McpServer"]

@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\McpTemplate.Console\McpTemplate.Console.csproj" />
-    <ProjectReference Include="..\McpTemplate.ToolServer\McpTemplate.ToolServer.csproj" />
+    <ProjectReference Include="..\McpTemplate.McpServer\McpTemplate.McpServer.csproj" />
   </ItemGroup>
 
   <ItemGroup>
