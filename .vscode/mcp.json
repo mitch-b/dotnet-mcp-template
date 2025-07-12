@@ -1,6 +1,6 @@
 {
 	"servers": {
-		"McpTemplate-tools": {
+		"McpTemplate": {
 			"url": "http://localhost:5499/",
       "dev": {},
 			"type": "http"

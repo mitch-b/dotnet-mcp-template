@@ -8,6 +8,10 @@ namespace McpTemplate.McpServer.Prompts;
 public class SamplePrompts()
 {
     [McpServerPrompt, Description("Getting date and time while using a tool")]
-    public static ChatMessage GetDateTimePrompt() => new(ChatRole.User,
-        "What is the current date and time using a tool?");
+    public static ChatMessage GetDateTimePrompt(IHttpContextAccessor httpContextAccessor)
+    {
+        var userName = httpContextAccessor.HttpContext?.User?.Identity?.Name ?? "User";
+        var prompt = $"Hello - I'm {userName}. Tell me the current date and time using a tool?";
+        return new ChatMessage(ChatRole.User, prompt);
+    }
 }
