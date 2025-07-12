@@ -26,27 +26,66 @@ Take this template repository and create your repo from it.
 
 ## OAuth Configuration
 
-To enable OAuth protection for your ToolServer and Console client, add an `OAuth` section to your `appsettings.json` (or use user-secrets for sensitive values):
+This sample comes configured and tested against using Microsoft Entra ID app registration for authentication and authorization support. Replace any assumptions accordingly.
+
+### Entra App Registration
+
+Create a new App Registration in Entra.
+
+* **Name**: McpTemplate Server
+* **Platform**: `Web`, redirect uri: `http://localhost:5000/callback`
+
+Create.
+
+* In **Overview** blade: 
+  * Make note of the Application (client) Id - you'll use this later. 
+  * Make note of the Directory (tenant) Id - you'll use this later.
+* In **Authentication** blade:
+  * Ensure that `Access` and `ID` tokens are checked.
+* In **Expose an API** blade: 
+  * Set Application ID at the top (will be like `api://<guid>`)
+  * Add a new scope named `mcp.tools` (or whatever you prefer)
+
+
+### OAuth for ToolServer
+
+To enable OAuth protection for your ToolServer, add an `OAuth` section to your `appsettings.json` (or use user-secrets for sensitive values):
 
 ```json
 "OAuth": {
-  "Authority": "https://login.microsoftonline.com/{tenantId}/v2.0",
-  "Audience": "your-api-audience",
-  "ClientId": "your-client-id",
+  "Tenant": "<tenantId>",
+  "Audience": "api://your-audience-guid",
+  "Authority": "https://login.microsoftonline.com/<tenantId>/v2.0",
+  "Scopes": [ "api://your-audience-guid/mcp.tools" ]
+}
+```
+
+```bash
+dotnet user-secrets set OAuth:Tenant <tenantId>
+dotnet user-secrets set OAuth:Audience <your-audience-guid>
+dotnet user-secrets set OAuth:Authority https://login.microsoftonline.com/<tenantId>/v2.0
+dotnet user-secrets set OAuth:Scopes:0 api://<your-audience-guid>/mcp.tools
+```
+
+If you do **not** set the `OAuth` section, the ToolServer and Console will run in unauthenticated mode for quick local usage.
+
+
+### OAuth for Console (client)
+
+```json
+"OAuth": {
+  "ClientId": "<your-client-id>",
   "RedirectUri": "http://localhost:5000/callback",
-  "Scopes": [ "api://your-api-audience/.default" ]
+  "Scopes": [ "api://your-audience-guid/.default" ]
 }
 ```
 
 ```bash
 dotnet user-secrets set OAuth:ClientId <your-client-id>
-dotnet user-secrets set OAuth:Audience <your-api-audience>
-dotnet user-secrets set OAuth:Authority https://login.microsoftonline.com/<tenantId>/v2.0
 dotnet user-secrets set OAuth:RedirectUri http://localhost:5000/callback
-dotnet user-secrets set OAuth:Scopes:0 api://<your-api-audience>/.default
+dotnet user-secrets set OAuth:Scopes:0 api://<your-audience-guid>/.default
 ```
 
-If you do **not** set the `OAuth` section, the ToolServer and Console will run in unauthenticated mode for quick local usage.
 
 ---
 

@@ -1,6 +1,8 @@
 using McpTemplate.Application.Extensions;
+using McpTemplate.Common.Models;
 using McpTemplate.ToolServer.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ModelContextProtocol.AspNetCore.Authentication;
 using System.Security.Claims;
@@ -8,23 +10,22 @@ using System.Security.Claims;
 var builder = WebApplication.CreateBuilder(args);
 
 // Derive the server URL for Resource metadata
+// TODO: get from environment variable or configuration
 var serverUrl = "http://localhost:5499/"; // trailing slash important here...
 builder.AddServiceDefaults();
 builder.Services.AddProblemDetails();
 
-// Read OAuth config
-var oauthSection = builder.Configuration.GetSection("OAuth");
-var oauthAuthority = oauthSection["Authority"];
-var oauthAudience = oauthSection["Audience"];
-var oauthTenant = oauthSection["Tenant"];
+builder.Services.Configure<OAuthOptions>(builder.Configuration.GetSection("OAuth"));
+await using var serviceProvider = builder.Services.BuildServiceProvider();
+var oauthOptions = serviceProvider.GetRequiredService<IOptions<OAuthOptions>>().Value;
 
-var enableOAuth = !string.IsNullOrWhiteSpace(oauthAuthority)
-    && !string.IsNullOrWhiteSpace(oauthAudience);
+var enableOAuth = !string.IsNullOrWhiteSpace(oauthOptions.Authority)
+    && !string.IsNullOrWhiteSpace(oauthOptions.Audience);
 
 if (enableOAuth)
 {
-    string[] validAudiences = [$"{oauthAudience}"];
-    string[] validIssuers = [$"https://sts.windows.net/{oauthTenant}/", oauthAuthority!];
+    string[] validAudiences = [$"{oauthOptions.Audience}"];
+    string[] validIssuers = [$"https://sts.windows.net/{oauthOptions.Tenant}/", oauthOptions.Authority!];
     builder.Services.AddAuthentication(options =>
     {
         options.DefaultChallengeScheme = McpAuthenticationDefaults.AuthenticationScheme;
@@ -32,7 +33,7 @@ if (enableOAuth)
     })
     .AddJwtBearer(options =>
     {
-        options.Authority = oauthAuthority;
+        options.Authority = oauthOptions.Authority;
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
@@ -72,8 +73,8 @@ if (enableOAuth)
         {
             Resource = new Uri(serverUrl),
             ResourceDocumentation = new Uri("https://docs.example.com/api/McpTemplate"),
-            AuthorizationServers = { new Uri(oauthAuthority!) },
-            ScopesSupported = [$"{oauthAudience}/mcp.tools"]
+            AuthorizationServers = { new Uri(oauthOptions.Authority!) },
+            ScopesSupported = oauthOptions.Scopes ?? []
         };
     });
 
