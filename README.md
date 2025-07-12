@@ -41,7 +41,7 @@ Create.
   * Make note of the Application (client) Id - you'll use this later. 
   * Make note of the Directory (tenant) Id - you'll use this later.
 * In **Authentication** blade:
-  * Ensure that `Access` and `ID` tokens are checked.
+  * Ensure that `Web` platform has our redirect uri (needed if you're using a custom client, like the McpTemplate.Console)
 * In **Expose an API** blade: 
   * Set Application ID at the top (will be like `api://<guid>`)
   * Add a new scope named `mcp.tools` (or whatever you prefer)
@@ -80,19 +80,17 @@ If you do **not** set the `OAuth` section, the ToolServer and Console will run i
 
 ```json
 "OAuth": {
-  "Scopes": [ "api://d13cafd2-01ac-4692-a1d9-aa5611d7cbe0/.default" ],
+  "Scopes": [ "api://d13cafd2-01ac-4692-a1d9-aa5611d7cbe0/mcp.tools" ],
   "ClientId": "fb35dbf1-6916-4bbf-98ed-74821d8f7ba4",
   "RedirectUri": "http://localhost:5000/callback"
 }
 ```
 
 ```bash
-dotnet user-secrets set OAuth:Scopes:0 api://d13cafd2-01ac-4692-a1d9-aa5611d7cbe0/.default
+dotnet user-secrets set OAuth:Scopes:0 api://d13cafd2-01ac-4692-a1d9-aa5611d7cbe0/mcp.tools
 dotnet user-secrets set OAuth:ClientId fb35dbf1-6916-4bbf-98ed-74821d8f7ba4
 dotnet user-secrets set OAuth:RedirectUri http://localhost:5000/callback
 ```
-
-> Note: using `.default` instead of your named scope will request all API scopes.
 
 ---
 
@@ -117,7 +115,7 @@ Add these in Visual Studio by right-clicking your project and selecting "Manage 
     "Authority": "https://login.microsoftonline.com/eb4f98a8-4c60-4348-86a0-baea7df39d74/v2.0",
 
     "Audience": "api://d13cafd2-01ac-4692-a1d9-aa5611d7cbe0",
-    "Scopes": [ "api://d13cafd2-01ac-4692-a1d9-aa5611d7cbe0/.default" ],
+    "Scopes": [ "api://d13cafd2-01ac-4692-a1d9-aa5611d7cbe0/mcp.tools" ],
 
     "ClientId": "fb35dbf1-6916-4bbf-98ed-74821d8f7ba4",
     "RedirectUri": "http://localhost:5000/callback"
@@ -136,7 +134,7 @@ dotnet user-secrets set OAuth:Tenant eb4f98a8-4c60-4348-86a0-baea7df39d74
 dotnet user-secrets set OAuth:Authority https://login.microsoftonline.com/eb4f98a8-4c60-4348-86a0-baea7df39d74/v2.0
 
 dotnet user-secrets set OAuth:Audience api://d13cafd2-01ac-4692-a1d9-aa5611d7cbe0
-dotnet user-secrets set OAuth:Scopes:0 api://d13cafd2-01ac-4692-a1d9-aa5611d7cbe0/.default
+dotnet user-secrets set OAuth:Scopes:0 api://d13cafd2-01ac-4692-a1d9-aa5611d7cbe0/mcp.tools
 
 dotnet user-secrets set OAuth:ClientId fb35dbf1-6916-4bbf-98ed-74821d8f7ba4
 dotnet user-secrets set OAuth:RedirectUri http://localhost:5000/callback
