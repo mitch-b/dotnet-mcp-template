@@ -1,10 +1,11 @@
+using McpTemplate.Common.Interfaces;
+using McpTemplate.Common.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ModelContextProtocol.Client;
 using ModelContextProtocol.Protocol;
-using McpTemplate.Common.Models;
 
 namespace McpTemplate.Application.Extensions;
 
@@ -15,6 +16,12 @@ public static class ServiceCollectionExtensions
         using var serviceProvider = services.BuildServiceProvider();
         var options = serviceProvider.GetRequiredService<IOptions<McpTemplateOptions>>();
         var mcpServersConfig = options.Value;
+
+        // Read OAuth config if present
+        var oauthOptions = configuration.GetSection("OAuth").Get<OAuthOptions>();
+        var hasOAuth = oauthOptions != null &&
+            !string.IsNullOrWhiteSpace(oauthOptions.Authority) &&
+            !string.IsNullOrWhiteSpace(oauthOptions.ClientId);
 
         var loggerFactory = LoggerFactory.Create(builder =>
             builder.AddConsole().SetMinimumLevel(LogLevel.Trace));
@@ -30,22 +37,42 @@ public static class ServiceCollectionExtensions
                         Name = server.Name,
                         Version = "1.0.0"
                     },
-                    // Capabilities = new ClientCapabilities() { }
-                };;
+                };
                 switch (server.Type.ToLowerInvariant())
                 {
                     case "http":
                         var url = server.Url;
                         if (string.IsNullOrEmpty(url))
                             throw new InvalidOperationException($"No URL configured for MCP server '{server.Name}'");
-                        var client = new HttpClient { BaseAddress = new Uri(url) };
+                        var sharedHandler = new SocketsHttpHandler
+                        {
+                            PooledConnectionLifetime = TimeSpan.FromMinutes(2),
+                            PooledConnectionIdleTimeout = TimeSpan.FromMinutes(1)
+                        };
+                        var client = new HttpClient(sharedHandler) { BaseAddress = new Uri(url) };
                         var httpTransportOptions = new SseClientTransportOptions
                         {
                             Endpoint = client.BaseAddress!,
-                            TransportMode = HttpTransportMode.AutoDetect
+                            TransportMode = HttpTransportMode.AutoDetect,
                         };
-                        var httpClientTransport = new SseClientTransport(httpTransportOptions);
-                        return McpClientFactory.CreateAsync(httpClientTransport, clientOptions).GetAwaiter().GetResult();
+                        SseClientTransport httpClientTransport;
+                        if (hasOAuth)
+                        {
+                            httpTransportOptions.OAuth = new()
+                            {
+                                ClientName = "McpTemplate Client",
+                                ClientId = oauthOptions?.ClientId,
+                                RedirectUri = !string.IsNullOrWhiteSpace(oauthOptions?.RedirectUri) ? new Uri(oauthOptions.RedirectUri) : null!,
+                                Scopes = oauthOptions?.Scopes ?? [],
+                                AuthorizationRedirectDelegate = async (authorizationUrl, redirectUri, cancellationToken) =>
+                                {
+                                    var handler = serviceCollection.GetRequiredService<IOAuthAuthorizationHandler>();
+                                    return await handler.HandleAuthorizationUrlAsync(authorizationUrl, redirectUri, cancellationToken);
+                                }
+                            };
+                        }
+                        httpClientTransport = new SseClientTransport(httpTransportOptions, client, loggerFactory);
+                        return McpClientFactory.CreateAsync(httpClientTransport, clientOptions, loggerFactory).GetAwaiter().GetResult();
                     case "stdio":
                         string command;
                         List<string> args = new();
@@ -55,7 +82,6 @@ public static class ServiceCollectionExtensions
                             var image = server.Image;
                             var tag = string.IsNullOrWhiteSpace(server.Tag) ? "latest" : server.Tag;
                             command = "docker run";
-                            //args.Add("run");
                             args.Add("--rm");
                             args.Add("-i");
                             if (server.Args != null)

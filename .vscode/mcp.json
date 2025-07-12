@@ -1,0 +1,10 @@
+{
+	"servers": {
+		"McpTemplate-tools": {
+			"url": "http://localhost:5499/",
+      "dev": {},
+			"type": "http"
+		}
+	},
+	"inputs": []
+}

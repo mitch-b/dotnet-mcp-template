@@ -2,12 +2,17 @@ namespace McpTemplate.ToolServer.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddMcpServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddMcpServices(this IServiceCollection services, IConfiguration configuration, bool enableOAuth)
     {
-        services
+        var mcpBuilder = services
             .AddMcpServer()
             .WithHttpTransport(opt =>
             {
+                opt.Stateless = true;
+                // opt.ConfigureSessionOptions = (httpContext, mcpServerOptions, cancellationToken) =>
+                // {
+                //     return Task.CompletedTask;
+                // };
             })
             .WithToolsFromAssembly();
         return services;
