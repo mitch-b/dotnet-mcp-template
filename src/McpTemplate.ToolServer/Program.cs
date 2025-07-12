@@ -1,7 +1,6 @@
 using McpTemplate.Application.Extensions;
 using McpTemplate.ToolServer.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using ModelContextProtocol.AspNetCore.Authentication;
 using System.Security.Claims;
@@ -24,8 +23,8 @@ var enableOAuth = !string.IsNullOrWhiteSpace(oauthAuthority)
 
 if (enableOAuth)
 {
-    string[] validAudiences = [serverUrl, $"api://{oauthAudience}"];
-    string[] validIssuers = [oauthAuthority, $"https://sts.windows.net/{oauthTenant}/"];
+    string[] validAudiences = [$"{oauthAudience}"];
+    string[] validIssuers = [$"https://sts.windows.net/{oauthTenant}/", oauthAuthority!];
     builder.Services.AddAuthentication(options =>
     {
         options.DefaultChallengeScheme = McpAuthenticationDefaults.AuthenticationScheme;
@@ -74,7 +73,7 @@ if (enableOAuth)
             Resource = new Uri(serverUrl),
             ResourceDocumentation = new Uri("https://docs.example.com/api/McpTemplate"),
             AuthorizationServers = { new Uri(oauthAuthority!) },
-            ScopesSupported = [$"api://{oauthAudience}/mcp.tools"]
+            ScopesSupported = [$"{oauthAudience}/mcp.tools"]
         };
     });
 
