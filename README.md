@@ -1,15 +1,15 @@
 # .NET MCP Server Template
 
-* [Streamable HTTP](https://modelcontextprotocol.io/docs/concepts/transports) from Aspire host runtime.
-* .NET 9 application host
+* [Streamable HTTP](https://modelcontextprotocol.io/docs/concepts/transports) transport
+* OAuth support for protecting your MCP server
 * Docker container build
-* OAuth support for protecting your ToolServer and authenticating Console clients
+* Aspire host for local environment
 
 ## Get Started
 
 Take this template repository and create your repo from it. 
 
-1. Rename "`McpTemplate`" to your app's name using [renamer](https://github.com/mitch-b/renamer) tool.
+1. Rename "`McpTemplate`" to your app's name using [renamer](https://github.com/mitch-b/renamer) tool. All files, folders, and file contents will be renamed.
 
     ```bash
     # cd project root
@@ -18,11 +18,11 @@ Take this template repository and create your repo from it.
 
 ## What's Inside?
 
-* [McpClient Registration](./McpTemplate.Application/Extensions/ServiceCollectionExtensions.cs) from appsettings configuration
-* [Chat Completion in Console](./McpTemplate.Console/ChatRuntime.cs#L49) 
-* ToolServer [McpServer Setup](./McpTemplate.ToolServer/Program.cs)
-* ToolServer [DateTime](./McpTemplate.ToolServer/Tools/DateTimeTool.cs)
-
+* Tool [examples](./src/McpTemplate.McpServer/Tools/)
+* Prompt [examples](./src/McpTemplate.McpServer/Prompts/)
+* [MCP client registration](./McpTemplate.Application/Extensions/ServiceCollectionExtensions.cs) from appsettings configuration
+* [Chat completion in Console](./McpTemplate.Console/ChatRuntime.cs#L49) 
+* MCP server [setup](./McpTemplate.McpServer/Program.cs)
 
 ## OAuth Configuration
 
@@ -47,9 +47,9 @@ Create.
   * Add a new scope named `mcp.tools` (or whatever you prefer)
 
 
-### OAuth for ToolServer
+### OAuth for McpServer
 
-To enable OAuth protection for your ToolServer, add an `OAuth` section to your `appsettings.json` (or use user-secrets for sensitive values):
+To enable OAuth protection for your McpServer, add an `OAuth` section to your `appsettings.json` (or use user-secrets for sensitive values):
 
 (represented here with demo GUIDs)
 
@@ -71,7 +71,7 @@ dotnet user-secrets set OAuth:Audience api://d13cafd2-01ac-4692-a1d9-aa5611d7cbe
 dotnet user-secrets set OAuth:Scopes:0 api://d13cafd2-01ac-4692-a1d9-aa5611d7cbe0/mcp.tools
 ```
 
-If you do **not** set the `OAuth` section, the ToolServer and Console will run in unauthenticated mode for quick local usage.
+If you do **not** set the `OAuth` section, the McpServer and Console will run in unauthenticated mode for quick local usage.
 
 
 ### OAuth for Console (client)
@@ -146,7 +146,7 @@ To build the Docker image, run the following command within the `src` folder:
 
 ```bash
 docker build \
-  -f ./McpTemplate.ToolServer/Dockerfile \
+  -f ./McpTemplate.McpServer/Dockerfile \
   -t mcp-tools:dev \
   .
 
@@ -165,7 +165,7 @@ docker run \
 - **McpTemplate.Application**: Core business logic and service registration; extend here for new features/services.
 - **McpTemplate.Common**: Shared models and options; update for cross-project types and configuration.
 - **McpTemplate.Console**: Console app for testing and running chat completions; useful for local development.
-- **McpTemplate.ToolServer**: Implements MCP ToolServer and tools; add new tools in `Tools/` and configure in `Program.cs`.
+- **McpTemplate.McpServer**: Implements MCP server with tools and prompts; add new tools in `Tools/`, add new prompts in `Prompts/`, and configure in `Program.cs`.
 
 ### Aspire Components
 - **McpTemplate.AppHost**: Main entrypoint for hosting the application; configures and runs the Aspire Dashboard server for local development.
