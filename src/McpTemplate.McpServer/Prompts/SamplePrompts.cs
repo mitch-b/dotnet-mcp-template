@@ -21,7 +21,9 @@ public class SamplePrompts()
         Description("Echoing back user input")]
     public static ChatMessage GetEchoPrompt(IHttpContextAccessor httpContextAccessor, string userInput)
     {
-        var email = httpContextAccessor.HttpContext?.User?.GetEmail() ?? "[missing email]";
+        var email =
+            httpContextAccessor.HttpContext?.User?.GetEmail() ??
+            httpContextAccessor.HttpContext?.User?.GetUpn() ?? "[missing email]";
         var prompt = $"Hello - my email is {email}. Please say: '{userInput}'. Can you repeat that back to me?";
         return new ChatMessage(ChatRole.User, prompt);
     }

@@ -51,7 +51,8 @@ if (enableOAuth)
             OnTokenValidated = context =>
             {
                 var name = context.Principal?.Identity?.Name ?? "unknown";
-                var email = context.Principal?.FindFirstValue("preferred_username") ?? "unknown";
+                var email = context.Principal?.FindFirstValue("preferred_username") ??
+                    context.Principal?.GetUpn() ?? "unknown";
                 Console.WriteLine($"Token validated for: {name} ({email})");
                 return Task.CompletedTask;
             },
@@ -64,7 +65,7 @@ if (enableOAuth)
             {
                 Console.WriteLine($"Challenging client to authenticate with Entra ID");
                 return Task.CompletedTask;
-            }
+            },
         };
     })
     .AddMcp(options =>

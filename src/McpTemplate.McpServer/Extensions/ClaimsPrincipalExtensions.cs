@@ -18,4 +18,9 @@ public static class ClaimsPrincipalExtensions
         .Claims
         .FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?
         .Value;
+
+    public static string? GetUpn(this ClaimsPrincipal claimsPrincipal) => claimsPrincipal
+        .Claims
+        .FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn")?
+        .Value;
 }
