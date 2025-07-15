@@ -2,11 +2,6 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": ".NET Core Attach",
-      "type": "coreclr",
-      "request": "attach"
-    },
-    {
       "name": "Run AppHost",
       "type": "coreclr",
       "request": "launch",
@@ -31,6 +26,11 @@
       "cwd": "${workspaceFolder}/src/McpTemplate.Console",
       "stopAtEntry": false,
       "console": "integratedTerminal"
+    },
+    {
+      "name": ".NET Core Attach",
+      "type": "coreclr",
+      "request": "attach"
     }
   ],
   "compounds": [
