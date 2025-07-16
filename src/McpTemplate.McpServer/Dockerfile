@@ -1,14 +1,19 @@
 # Build stage
 FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
-ARG RUNTIME_IDENTIFIER=linux-musl-arm64
+
+ARG TARGETPLATFORM
+ARG TARGETARCH
+ARG BUILD_CONFIGURATION=Release
 
 WORKDIR /src
 
 COPY . .
 
-RUN dotnet publish McpTemplate.McpServer/McpTemplate.McpServer.csproj -c Release -o /app/publish --no-restore \
-    -p:PublishTrimmed=true -p:PublishReadyToRun=true -p:PublishSingleFile=true \
-    -p:IncludeNativeLibrariesForSelfExtract=true -r ${RUNTIME_IDENTIFIER}
+RUN dotnet publish McpTemplate.McpServer/McpTemplate.McpServer.csproj \
+  -c ${BUILD_CONFIGURATION} -o /app/publish \
+  -p:PublishTrimmed=true -p:PublishReadyToRun=true \
+  -p:PublishSingleFile=true --arch ${TARGETARCH} \
+  -p:IncludeNativeLibrariesForSelfExtract=true
 
 # Final stage
 FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine AS final
