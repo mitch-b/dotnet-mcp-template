@@ -3,7 +3,7 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.5.0-preview.1.25380.4" />
+    <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.5.0-preview.1.25403.2" />
     <PackageVersion Include="Azure.AI.OpenAI" Version="2.2.0-beta.5" />
     <PackageVersion Include="Azure.Identity" Version="1.14.2" />
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="9.0.6" />
