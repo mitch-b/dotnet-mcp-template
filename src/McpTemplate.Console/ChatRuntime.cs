@@ -20,7 +20,7 @@ internal class ChatRuntime(
 
     private async Task RunConsoleLoop(CancellationToken cancellationToken)
     {
-        System.Console.WriteLine("Console chat client ");
+        System.Console.WriteLine("Console chat client");
         System.Console.WriteLine("Type 'exit' to quit the application.");
         System.Console.WriteLine();
 
@@ -78,7 +78,7 @@ internal class ChatRuntime(
     private string GetSystemPrompt()
     {
         return string.Join(Environment.NewLine, [
-            "You are a helpful assistant .",
+            "You are a helpful assistant.",
             "Assist by using tools available to you to fulfill the request.",
         ]);
     }
