@@ -30,6 +30,7 @@ public class OAuthAuthorizationHandler(ILogger<OAuthAuthorizationHandler> logger
         }
     }
 
+    /// <summary>
     /// Handles the OAuth authorization URL by starting a local HTTP server and opening a browser.
     /// This implementation demonstrates how SDK consumers can provide their own authorization flow.
     /// </summary>
