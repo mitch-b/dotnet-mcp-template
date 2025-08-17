@@ -13,9 +13,8 @@ public static class ServiceCollectionExtensions
 {
     public static void AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
     {
-        using var serviceProvider = services.BuildServiceProvider();
-        var options = serviceProvider.GetRequiredService<IOptions<McpTemplateOptions>>();
-        var mcpServersConfig = options.Value;
+        var mcpServersConfig =
+            configuration.GetSection(nameof(McpTemplateOptions)).Get<McpTemplateOptions>() ?? new();
 
         // Read OAuth config if present
         var oauthOptions = configuration.GetSection("OAuth").Get<OAuthOptions>();
@@ -23,13 +22,11 @@ public static class ServiceCollectionExtensions
             !string.IsNullOrWhiteSpace(oauthOptions.Authority) &&
             !string.IsNullOrWhiteSpace(oauthOptions.ClientId);
 
-        var loggerFactory = LoggerFactory.Create(builder =>
-            builder.AddConsole().SetMinimumLevel(LogLevel.Trace));
-
         foreach (var server in mcpServersConfig.McpServers)
         {
-            services.AddKeyedSingleton<IMcpClient>(server.Name, (serviceCollection, _) =>
+            services.AddKeyedSingleton<IMcpClient>(server.Name, (serviceProvider, _) =>
             {
+                var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
                 var clientOptions = new McpClientOptions
                 {
                     ClientInfo = new Implementation
@@ -66,7 +63,7 @@ public static class ServiceCollectionExtensions
                                 Scopes = oauthOptions?.Scopes ?? [],
                                 AuthorizationRedirectDelegate = async (authorizationUrl, redirectUri, cancellationToken) =>
                                 {
-                                    var handler = serviceCollection.GetRequiredService<IOAuthAuthorizationHandler>();
+                                    var handler = serviceProvider.GetRequiredService<IOAuthAuthorizationHandler>();
                                     return await handler.HandleAuthorizationUrlAsync(authorizationUrl, redirectUri, cancellationToken);
                                 }
                             };
