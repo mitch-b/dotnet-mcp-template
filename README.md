@@ -16,6 +16,8 @@ Take this template repository and create your repo from it.
     docker run --rm -it -v "$PWD:/data" ghcr.io/mitch-b/renamer McpTemplate YourMcp
     ```
 
+To use authentication and authorization, follow the [OAuth for McpServer](#oauth-for-mcpserver) section below.
+
 ## What's Inside?
 
 * Tool [examples](./src/McpTemplate.McpServer/Tools/)
@@ -63,6 +65,8 @@ To enable OAuth protection for your McpServer, add an `OAuth` section to your `a
 }
 ```
 
+To use user-secrets instead of `appsettings.json`, run the following commands in the `./src/McpTemplate.McpServer/` project directory:
+
 ```bash
 dotnet user-secrets set OAuth:Tenant eb4f98a8-4c60-4348-86a0-baea7df39d74
 dotnet user-secrets set OAuth:Authority https://login.microsoftonline.com/eb4f98a8-4c60-4348-86a0-baea7df39d74/v2.0
@@ -71,7 +75,7 @@ dotnet user-secrets set OAuth:Audience api://d13cafd2-01ac-4692-a1d9-aa5611d7cbe
 dotnet user-secrets set OAuth:Scopes:0 api://d13cafd2-01ac-4692-a1d9-aa5611d7cbe0/mcp.tools
 ```
 
-If you do **not** set the `OAuth` section, the McpServer and Console will run in unauthenticated mode for quick local usage.
+If you do **not** set the `OAuth` section, the McpServer and Console will run in unauthenticated mode for quick local usage. Since the default [`appsettings.json`](./src/McpTemplate.McpServer/appsettings.json) does contain an `OAuth` section, delete it so that the server can start without authentication.
 
 
 ### OAuth for Console (client)
@@ -98,7 +102,7 @@ dotnet user-secrets set OAuth:RedirectUri http://localhost:5000/callback
 |--|--|
 | McpTemplateOptions:Endpoint | https://{name}.openai.azure.com |
 | McpTemplateOptions:ApiKey | Get from your Azure OpenAI Service |
-| McpTemplateOptions:Model | Name of your deployed model, example: `gpt-4o-mini` |
+| McpTemplateOptions:Model | Name of your deployed model, example: `gpt-5-mini`. Check [pricing](https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/). |
 
 
 Add these in Visual Studio by right-clicking your project and selecting "Manage User Secrets". This will open a `secrets.json` file. Add the above secrets in the following format:
@@ -108,7 +112,7 @@ Add these in Visual Studio by right-clicking your project and selecting "Manage 
   "McpTemplateOptions": {
     "Endpoint": "https://{name}.openai.azure.com",
     "ApiKey": "<your_api_key>",
-    "Model": "gpt-4o-mini"
+    "Model": "gpt-5-mini"
   },
   "OAuth": {
     "Tenant": "eb4f98a8-4c60-4348-86a0-baea7df39d74",
@@ -128,7 +132,7 @@ Or, you can use the command line to set them:
 ```bash
 dotnet user-secrets set McpTemplateOptions:Endpoint https://{name}.openai.azure.com
 dotnet user-secrets set McpTemplateOptions:ApiKey <your_api_key>
-dotnet user-secrets set McpTemplateOptions:Model gpt-4o-mini
+dotnet user-secrets set McpTemplateOptions:Model gpt-5-mini
 
 dotnet user-secrets set OAuth:Tenant eb4f98a8-4c60-4348-86a0-baea7df39d74
 dotnet user-secrets set OAuth:Authority https://login.microsoftonline.com/eb4f98a8-4c60-4348-86a0-baea7df39d74/v2.0
@@ -155,7 +159,7 @@ docker run \
   -p 8080:8080 \
   -e McpTemplateOptions__Endpoint="https://{name}.openai.azure.com" \
   -e McpTemplateOptions__ApiKey="your-api-key" \
-  -e McpTemplateOptions__Model="gpt-4o-mini" \
+  -e McpTemplateOptions__Model="gpt-5-mini" \
   mcp-tools:dev
 ```
 
