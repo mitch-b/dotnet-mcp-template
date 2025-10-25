@@ -3,34 +3,34 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.5.0" />
-    <PackageVersion Include="Azure.AI.OpenAI" Version="2.3.0-beta.2" />
-    <PackageVersion Include="Azure.Identity" Version="1.16.0" />
+    <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.5.2" />
+    <PackageVersion Include="Azure.AI.OpenAI" Version="2.5.0-beta.1" />
+    <PackageVersion Include="Azure.Identity" Version="1.17.0" />
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="9.0.6" />
-    <PackageVersion Include="Microsoft.Extensions.AI" Version="9.9.1" />
-    <PackageVersion Include="Microsoft.Extensions.AI.OpenAI" Version="9.9.1-preview.1.25474.6" />
+    <PackageVersion Include="Microsoft.Extensions.AI" Version="9.10.1" />
+    <PackageVersion Include="Microsoft.Extensions.AI.OpenAI" Version="9.10.1-preview.1.25521.4" />
     <PackageVersion Include="Microsoft.Extensions.Configuration" Version="9.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.9" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.10" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="9.9.0" />
-    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.9" />
-    <PackageVersion Include="Microsoft.Extensions.Logging" Version="9.0.9" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="9.0.9" />
+    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="9.10.0" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.10" />
+    <PackageVersion Include="Microsoft.Extensions.Logging" Version="9.0.10" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="9.0.10" />
     <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="9.5.0" />
+    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="9.5.2" />
     <PackageVersion Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.14.0" />
-    <PackageVersion Include="ModelContextProtocol.AspNetCore" Version="0.4.0-preview.1" />
-    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.9" />
+    <PackageVersion Include="ModelContextProtocol.AspNetCore" Version="0.4.0-preview.3" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.10" />
     <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.14.0" />
-    <PackageVersion Include="OpenTelemetry" Version="1.12.0" />
-    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.12.0" />
-    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.12.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.12.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.12.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.12.0" />
+    <PackageVersion Include="OpenTelemetry" Version="1.13.1" />
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.13.1" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.13.1" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.13.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.13.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.13.0" />
     <PackageVersion Include="Scalar.AspNetCore" Version="2.4.15" />
     <PackageVersion Include="YamlDotNet" Version="16.3.0" />
   </ItemGroup>
