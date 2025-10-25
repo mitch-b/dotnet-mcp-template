@@ -40,7 +40,10 @@ public static class ServiceCollectionExtensions
                     case "http":
                         var url = server.Url;
                         if (string.IsNullOrEmpty(url))
+                        {
                             throw new InvalidOperationException($"No URL configured for MCP server '{server.Name}'");
+                        }
+
                         var sharedHandler = new SocketsHttpHandler
                         {
                             PooledConnectionLifetime = TimeSpan.FromMinutes(2),

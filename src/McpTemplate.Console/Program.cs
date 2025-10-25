@@ -1,15 +1,15 @@
+using System.ClientModel;
 using Azure.AI.OpenAI;
+using McpTemplate.Application.Extensions;
+using McpTemplate.Common.Interfaces;
+using McpTemplate.Common.Models;
+using McpTemplate.Console;
+using McpTemplate.Console.Handlers;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using System.ClientModel;
-using McpTemplate.Application.Extensions;
-using McpTemplate.Common.Models;
-using McpTemplate.Console;
-using McpTemplate.Common.Interfaces;
-using McpTemplate.Console.Handlers;
 
 var builder = Host.CreateApplicationBuilder();
 builder.Configuration.AddUserSecrets<Program>();

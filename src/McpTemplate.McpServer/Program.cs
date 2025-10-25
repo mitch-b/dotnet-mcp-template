@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using McpTemplate.Application.Extensions;
 using McpTemplate.Common.Models;
 using McpTemplate.McpServer.Extensions;
@@ -5,7 +6,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ModelContextProtocol.AspNetCore.Authentication;
-using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 

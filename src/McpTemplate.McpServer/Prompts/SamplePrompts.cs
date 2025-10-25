@@ -1,7 +1,7 @@
-using Microsoft.Extensions.AI;
-using McpTemplate.McpServer.Extensions;
-using ModelContextProtocol.Server;
 using System.ComponentModel;
+using McpTemplate.McpServer.Extensions;
+using Microsoft.Extensions.AI;
+using ModelContextProtocol.Server;
 
 namespace McpTemplate.McpServer.Prompts;
 
