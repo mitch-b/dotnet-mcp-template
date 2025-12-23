@@ -3,7 +3,7 @@
 {
 	"name": "dotnet-mcp",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/dotnet:1-9.0-bookworm",
+	"image": "mcr.microsoft.com/devcontainers/dotnet:1-10.0-noble",
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
   "features": {
@@ -21,12 +21,17 @@
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "dotnet restore",
 
+  "onCreateCommand": "dotnet new install Aspire.ProjectTemplates --force",
+  "postStartCommand": "dotnet dev-certs https --trust",
+
 	// Configure tool-specific properties.
 	"customizations": {
     "vscode": {
       "extensions": [
         "heaths.vscode-guid",
         "EditorConfig.EditorConfig",
+        "GitHub.copilot-chat",
+        "microsoft-aspire.aspire-vscode",
         "ms-azuretools.vscode-containers",
         "ms-dotnettools.csdevkit",
         "ms-vscode-remote.remote-containers"

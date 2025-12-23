@@ -24,7 +24,7 @@ public static class ServiceCollectionExtensions
 
         foreach (var server in mcpServersConfig.McpServers)
         {
-            services.AddKeyedSingleton<IMcpClient>(server.Name, (serviceProvider, _) =>
+            services.AddKeyedSingleton<McpClient>(server.Name, (serviceProvider, _) =>
             {
                 var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
                 var clientOptions = new McpClientOptions
@@ -50,17 +50,16 @@ public static class ServiceCollectionExtensions
                             PooledConnectionIdleTimeout = TimeSpan.FromMinutes(1)
                         };
                         var client = new HttpClient(sharedHandler) { BaseAddress = new Uri(url) };
-                        var httpTransportOptions = new SseClientTransportOptions
+                        var httpTransportOptions = new HttpClientTransportOptions
                         {
                             Endpoint = client.BaseAddress!,
                             TransportMode = HttpTransportMode.AutoDetect,
                         };
-                        SseClientTransport httpClientTransport;
+                        HttpClientTransport httpClientTransport;
                         if (hasOAuth)
                         {
                             httpTransportOptions.OAuth = new()
                             {
-                                ClientName = "McpTemplate Client",
                                 ClientId = oauthOptions?.ClientId,
                                 RedirectUri = !string.IsNullOrWhiteSpace(oauthOptions?.RedirectUri) ? new Uri(oauthOptions.RedirectUri) : null!,
                                 Scopes = oauthOptions?.Scopes ?? [],
@@ -71,8 +70,8 @@ public static class ServiceCollectionExtensions
                                 }
                             };
                         }
-                        httpClientTransport = new SseClientTransport(httpTransportOptions, client, loggerFactory);
-                        return McpClientFactory.CreateAsync(httpClientTransport, clientOptions, loggerFactory).GetAwaiter().GetResult();
+                        httpClientTransport = new HttpClientTransport(httpTransportOptions, client, loggerFactory);
+                        return McpClient.CreateAsync(httpClientTransport, clientOptions, loggerFactory).GetAwaiter().GetResult();
                     case "stdio":
                         string command;
                         List<string> args = new();
@@ -109,7 +108,7 @@ public static class ServiceCollectionExtensions
                             Arguments = [.. args]
                         };
                         var stdioTransport = new StdioClientTransport(stdioOptions);
-                        return McpClientFactory.CreateAsync(stdioTransport, clientOptions, loggerFactory).GetAwaiter().GetResult();
+                        return McpClient.CreateAsync(stdioTransport, clientOptions, loggerFactory).GetAwaiter().GetResult();
                     default:
                         throw new InvalidOperationException($"Unknown MCP server type '{server.Type}' for '{server.Name}'");
                 }
