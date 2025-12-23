@@ -3,7 +3,8 @@
 * [Streamable HTTP](https://modelcontextprotocol.io/docs/concepts/transports) transport
 * OAuth support for protecting your MCP server
 * Docker container build
-* Aspire host for local environment
+* [Aspire](https://aspire.dev/) host for local environment
+* Azure AI integration
 
 ## Get Started
 

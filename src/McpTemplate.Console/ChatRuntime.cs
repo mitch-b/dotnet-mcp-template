@@ -95,7 +95,7 @@ internal class ChatRuntime(
         {
             try
             {
-                var client = serviceProvider.GetKeyedService<IMcpClient>(key);
+                var client = serviceProvider.GetKeyedService<McpClient>(key);
                 if (client is not null)
                 {
                     var tools = await client.ListToolsAsync();
