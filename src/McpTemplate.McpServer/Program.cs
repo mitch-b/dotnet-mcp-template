@@ -3,7 +3,6 @@ using McpTemplate.Application.Extensions;
 using McpTemplate.Common.Models;
 using McpTemplate.McpServer.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ModelContextProtocol.AspNetCore.Authentication;
 
@@ -15,9 +14,8 @@ var serverUrl = "http://localhost:5499/"; // trailing slash important here...
 builder.AddServiceDefaults();
 builder.Services.AddProblemDetails();
 
+var oauthOptions = builder.Configuration.GetSection("OAuth").Get<OAuthOptions>() ?? new();
 builder.Services.Configure<OAuthOptions>(builder.Configuration.GetSection("OAuth"));
-await using var serviceProvider = builder.Services.BuildServiceProvider();
-var oauthOptions = serviceProvider.GetRequiredService<IOptions<OAuthOptions>>().Value;
 
 var enableOAuth = !string.IsNullOrWhiteSpace(oauthOptions.Authority)
     && !string.IsNullOrWhiteSpace(oauthOptions.Audience);

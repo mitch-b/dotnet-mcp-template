@@ -174,7 +174,7 @@ public static class ServiceCollectionExtensions
         transportOptions.OAuth = new()
         {
             ClientId = oauthOptions!.ClientId,
-            RedirectUri = ParseRedirectUri(oauthOptions.RedirectUri),
+            RedirectUri = ParseRedirectUri(oauthOptions.RedirectUri)!,
             Scopes = oauthOptions.Scopes ?? [],
             AuthorizationRedirectDelegate = async (authorizationUrl, redirectUri, cancellationToken) =>
             {
