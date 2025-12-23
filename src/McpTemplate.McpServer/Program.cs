@@ -84,9 +84,9 @@ if (enableOAuth)
 
 builder.Services.AddHttpContextAccessor();
 
-// McpTemplate.Application.Extensions
-builder.Services.AddApplicationServices(builder.Configuration);
-// McpTemplate.McpServer.Extensions
+// McpTemplate.Application.Extensions - registers MCP clients from configuration
+builder.Services.AddMcpClients(builder.Configuration);
+// McpTemplate.McpServer.Extensions - registers MCP server tools and prompts
 builder.Services.AddMcpServices(builder.Configuration, enableOAuth);
 
 var app = builder.Build();

@@ -18,7 +18,7 @@ builder.Services.Configure<McpTemplateOptions>(builder.Configuration.GetSection(
 builder.Services.Configure<OAuthOptions>(builder.Configuration.GetSection("OAuth"));
 
 builder.Services.AddSingleton<IOAuthAuthorizationHandler, OAuthAuthorizationHandler>();
-builder.Services.AddApplicationServices(builder.Configuration);
+builder.Services.AddMcpClients(builder.Configuration);
 
 await using var serviceProvider = builder.Services.BuildServiceProvider();
 var options = serviceProvider.GetRequiredService<IOptions<McpTemplateOptions>>().Value;
